@@ -3,9 +3,11 @@ import './index.scss'
 interface Props{
   words?: number;
   characters?: number
+  sentences?:number
+  paragraphs?: number
 }
 
-const ResultBox: React.FC<Props> = ({words, characters}) => {
+const ResultBox: React.FC<Props> = ({words, characters, sentences, paragraphs}) => {
   const resultBar = [
     {
       title: 'Words',
@@ -17,11 +19,11 @@ const ResultBox: React.FC<Props> = ({words, characters}) => {
     },
     {
       title: 'Sentences',
-      value: 0,
+      value: sentences,
     },
     {
       title: 'Paragraphs ',
-      value: 0,
+      value: paragraphs,
     },
     {
       title: 'Pronouns',

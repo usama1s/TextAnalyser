@@ -5,12 +5,16 @@ import Footer from './components/Footer'
 import Navbar from './components/Navbar'
 import ResultBox from './components/ResultBox'
 import TextArea from './components/TextArea'
-import { log } from 'console'
+
 
 const App = () => {
   const [data, setData] = useState<string>('');
   const [characters, setCharacters] = useState<number>(0)
   const [words, setWords] = useState<number>(0)
+  const [sentences, setSentences] = useState<number>(0)
+  const [paragraphs, setParagraphs] = useState<number>(0)
+  const [readingTime, setReadingTime] = useState<number>(0)
+  const [longestWord, setLongestWord] = useState<string>("")
 
   const calculateWords = (value: string)=>{
     const numberOfCharacters = value.split(' ');
@@ -20,32 +24,40 @@ const App = () => {
     }
   }
 
-  const calculateCharacters = (value: string)=>{
+  const calculateCharactersReacingTime = (value: string)=>{
     setCharacters(value.length)
+    setReadingTime(Math.ceil(value.length/225))
+
+    
   }
 
   const calculateSentences = (value: string )=>{
-    const containsDot =  value.split('.')
-    const containsExclamationMark =  value.split('!')
-    const containsQuestionMark =  value.split('?')
-
-    if(containsDot || containsExclamationMark || containsQuestionMark){
-      const newDotsArrar = containsDot.filter((word: string) => word !== '');
-      console.log("=> containsDot",newDotsArrar)
-      // console.log("=> containsExclamationMark",containsExclamationMark)
-      // console.log("=> containsQuestionMark",containsQuestionMark)
-
-      const newSentencesArr =[...newDotsArrar, ...containsExclamationMark, ...containsQuestionMark] 
-    }
-
+    value = value.replace(/ /g, '');
+    setSentences(value.replace(/[^.&&!&&?]/g, "").length)
   }
 
-  console.log("data", data)
+  const calculateParagraphs = (value: string )=>{
+
+    const numParagraphs = value.replace(/\n$/gm, '').split(/\n/).length;
+    setParagraphs(numParagraphs)
+  }
+
+  const findLongestWord = (value: string )=>{
+
+    const test=value.split(' ');
+
+    console.log(test);
+ 
+  }
+
+  
   useEffect(()=>{
     if(data){
       calculateWords(data)
-      calculateCharacters(data)
+      calculateCharactersReacingTime(data)
       calculateSentences(data)
+      calculateParagraphs(data)
+      findLongestWord(data)
     }
   },[data])
 
@@ -54,9 +66,9 @@ const App = () => {
       <Navbar />
       <div className="small-container">
         <div className="main-app">
-          <ResultBox characters={characters} words={words}/>
+          <ResultBox characters={characters} words={words} sentences={sentences} paragraphs={paragraphs}/>
           <TextArea data={data} setData={setData}/>
-          <BottomResultBox />
+          <BottomResultBox readingTime={readingTime} longestWord={longestWord}/>
         </div>
       </div>
       <Footer />
